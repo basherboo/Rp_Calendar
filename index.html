@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RP Time Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #222;
+            color: white;
+        }
+        #rpTime, #countdown {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>RP Time Tracker</h1>
+    <p>Real-life to RP time conversion</p>
+    <div id="rpTime">Loading RP time...</div>
+    <div id="countdown">Loading countdown...</div>
+    
+    <script>
+        function updateRPTime() {
+            const startDate = new Date("2025-02-16T00:00:00Z"); // Real-life start date
+            const rpStartDate = new Date("1980-01-05T00:00:00Z"); // RP start date
+            const now = new Date();
+            
+            const msPerRealWeek = 7 * 24 * 60 * 60 * 1000;
+            const msElapsed = now - startDate;
+            
+            const rpMonthsElapsed = msElapsed / msPerRealWeek; // 1 real week = 1 RP month
+            const rpDaysElapsed = rpMonthsElapsed * 30; // 1 RP month = 30 days
+            const rpHoursElapsed = rpDaysElapsed * 24; // 1 RP day = 24 hours
+            
+            const rpCurrentDate = new Date(rpStartDate.getTime() + rpHoursElapsed * 60 * 60 * 1000);
+            const rpYear = rpCurrentDate.getFullYear();
+            const rpMonth = rpCurrentDate.getMonth() + 1;
+            const rpDay = rpCurrentDate.getDate();
+            const rpHour = rpCurrentDate.getHours();
+            const rpMinute = rpCurrentDate.getMinutes();
+            
+            document.getElementById("rpTime").innerHTML = `Current RP Time: ${rpYear}-${rpMonth.toString().padStart(2, '0')}-${rpDay.toString().padStart(2, '0')} ${rpHour.toString().padStart(2, '0')}:${rpMinute.toString().padStart(2, '0')}`;
+        }
+        
+        function updateCountdown() {
+            const now = new Date();
+            const nextRealDay = new Date();
+            nextRealDay.setHours(24, 0, 0, 0);
+            
+            const timeUntilNextRealDay = nextRealDay - now;
+            const hours = Math.floor(timeUntilNextRealDay / (1000 * 60 * 60));
+            const minutes = Math.floor((timeUntilNextRealDay % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeUntilNextRealDay % (1000 * 60)) / 1000);
+            
+            document.getElementById("countdown").innerHTML = `Next RP Day in: ${hours}h ${minutes}m ${seconds}s`;
+        }
+        
+        function updateAll() {
+            updateRPTime();
+            updateCountdown();
+        }
+        
+        setInterval(updateAll, 1000); // Update every second
+        updateAll();
+    </script>
+</body>
+</html>
